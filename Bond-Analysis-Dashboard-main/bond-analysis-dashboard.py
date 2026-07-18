@@ -140,6 +140,3 @@ with col2:
     st.write(f'Min Simulated Price: `${mc_stats["min_price"]:.2f}`')
     st.write(f'Max Simulated Price: `${mc_stats["max_price"]:.2f}`')
 
-st.caption('Built with Python, Scipy, Numpy, Streamlit, Plotly')
-st.caption('Veer Sandhu - 2025')
-st.caption("[Github](https://github.com/Real-VeerSandhu/Bond-Analysis-Dashboard)")
