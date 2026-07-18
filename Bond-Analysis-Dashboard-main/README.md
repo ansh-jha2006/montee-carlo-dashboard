@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a **Fixed-Income Bond Analysis [Dashboard](https://bond-analysis-dashboard.streamlit.app/)** built using **Python, Streamlit, NumPy, SciPy, and Plotly**. The dashboard provides key insights into bond valuation, risk metrics, and price simulations using Monte Carlo methods.
+This project is a **Fixed-Income Bond Analysis  built using **Python, Streamlit, NumPy, SciPy, and Plotly**. The dashboard provides key insights into bond valuation, risk metrics, and price simulations using Monte Carlo methods.
 
 
 ## Features
@@ -30,8 +30,6 @@ The Monte Carlo module generates **thousands of bond price simulations**, provid
 - **NumPy & SciPy** – Numerical computing and optimization.
 - **Plotly** – Data visualization for histograms and charts.
 
-## Sample Output
-![Sample](https://github.com/Real-VeerSandhu/Bond-Analysis-Dashboard/blob/main/demo.png)
 
 ## License
 This project is licensed under the MIT License – see the LICENSE file for details.
