@@ -1,4 +1,4 @@
-scipy==1.11.3
-streamlit
-numpy==1.26.1
-plotly==5.19.0
+streamlit>=1.30
+numpy>=1.26
+scipy>=1.11
+plotly>=5.19
