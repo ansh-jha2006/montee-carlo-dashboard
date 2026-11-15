@@ -58,7 +58,7 @@ st.markdown(
 
 
 def money(x: float) -> str:
-    return f"${x:,.2f}"
+    return f"₹{x:,.2f}"
 
 
 def style_fig(fig: go.Figure, title: str, xtitle: str, ytitle: str, height: int = 420) -> go.Figure:
@@ -85,14 +85,14 @@ def run_simulation(face_value, coupon_rate, years, ytm, iterations, yield_vol, f
 
 # ---- Sidebar inputs -----------------------------------------------------------
 st.sidebar.markdown("### Bond Parameters")
-face_value = st.sidebar.number_input("Face Value ($)", min_value=0.01, value=1000.00, format="%.2f")
+face_value = st.sidebar.number_input("Face Value (₹)", min_value=0.01, value=1000.00, format="%.2f")
 coupon_pct = st.sidebar.number_input("Coupon Rate (%)", min_value=0.0, max_value=100.0, value=5.00, format="%.2f")
 freq = st.sidebar.selectbox("Coupon Payments per Year", [1, 2, 4, 12], index=1,
                             format_func=lambda f: {1: "1 (annual)", 2: "2 (semiannual)",
                                                    4: "4 (quarterly)", 12: "12 (monthly)"}[f])
 years = st.sidebar.number_input("Years to Maturity", min_value=1.0 / freq, max_value=100.0,
                                 value=10.00, step=0.5, format="%.2f")
-current_price = st.sidebar.number_input("Current Bond Price ($)", min_value=0.01, value=950.00, format="%.2f")
+current_price = st.sidebar.number_input("Current Bond Price (₹)", min_value=0.01, value=950.00, format="%.2f")
 
 st.sidebar.divider()
 st.sidebar.markdown("### Scenario & Simulation")
@@ -189,21 +189,21 @@ with tab_curve:
     fig_curve.add_trace(go.Scatter(
         x=curve_ytms * 100, y=curve_prices, mode="lines", name="Actual price",
         line=dict(color=PRIMARY, width=3), fill="tozeroy", fillcolor="rgba(75,100,255,0.06)",
-        hovertemplate="YTM %{x:.2f}%<br>Price $%{y:,.2f}<extra></extra>"))
+        hovertemplate="YTM %{x:.2f}%<br>Price ₹%{y:,.2f}<extra></extra>"))
     fig_curve.add_trace(go.Scatter(
         x=curve_ytms * 100, y=tangent, mode="lines", name="Duration estimate (linear)",
         line=dict(color=MUTED, width=1.5, dash="dot"),
-        hovertemplate="YTM %{x:.2f}%<br>Linear est. $%{y:,.2f}<extra></extra>"))
+        hovertemplate="YTM %{x:.2f}%<br>Linear est. ₹%{y:,.2f}<extra></extra>"))
     fig_curve.add_trace(go.Scatter(
         x=[ytm * 100], y=[current_price], mode="markers", name="Current",
         marker=dict(size=12, color=ACCENT, line=dict(color="white", width=2)),
-        hovertemplate="Current<br>YTM %{x:.3f}%<br>Price $%{y:,.2f}<extra></extra>"))
+        hovertemplate="Current<br>YTM %{x:.3f}%<br>Price ₹%{y:,.2f}<extra></extra>"))
     if interest_shock != 0:
         fig_curve.add_trace(go.Scatter(
             x=[shocked_ytm * 100], y=[price_shocked], mode="markers", name="After shock",
             marker=dict(size=12, color=VIOLET, symbol="diamond", line=dict(color="white", width=2)),
-            hovertemplate="After shock<br>YTM %{x:.3f}%<br>Price $%{y:,.2f}<extra></extra>"))
-    style_fig(fig_curve, "Price vs Yield", "Yield to Maturity (%)", "Bond Price ($)", height=460)
+            hovertemplate="After shock<br>YTM %{x:.3f}%<br>Price ₹%{y:,.2f}<extra></extra>"))
+    style_fig(fig_curve, "Price vs Yield", "Yield to Maturity (%)", "Bond Price (₹)", height=460)
     fig_curve.update_yaxes(range=[max(0, min(curve_prices.min(), tangent.min()) * 0.95),
                                   max(curve_prices.max(), tangent.max()) * 1.03])
     st.plotly_chart(fig_curve)
@@ -229,14 +229,14 @@ with tab_mc:
     fig_mc.add_trace(go.Histogram(
         x=prices, nbinsx=min(100, max(10, iterations // 10)), marker=dict(color=PRIMARY),
         opacity=0.85, name="Simulated prices",
-        hovertemplate="Price $%{x:,.2f}<br>Count %{y}<extra></extra>"))
+        hovertemplate="Price ₹%{x:,.2f}<br>Count %{y}<extra></extra>"))
     fig_mc.add_vrect(x0=mc["p5"], x1=mc["p95"], fillcolor=VIOLET, opacity=0.08, line_width=0)
     fig_mc.add_vline(x=current_price, line_dash="dash", line_color=ACCENT,
                      annotation_text="Market price", annotation_position="top left")
     fig_mc.add_vline(x=mc["mean_price"], line_color=INK, line_width=1.5,
                      annotation_text="Mean", annotation_position="top right")
     style_fig(fig_mc, f"Simulated Bond Price Distribution ({iterations:,} iterations, σ = {yield_vol_pct:.1f}%)",
-              "Bond Price ($)", "Frequency", height=440)
+              "Bond Price (₹)", "Frequency", height=440)
     fig_mc.update_layout(showlegend=False)
     st.plotly_chart(fig_mc)
     st.caption("Shaded band: central 90% of outcomes (5th to 95th percentile).")
@@ -248,25 +248,25 @@ with tab_cf:
     cf_df = pd.DataFrame({
         "Period": np.arange(1, len(times) + 1),
         "Year": times,
-        "Cash Flow ($)": flows,
+        "Cash Flow (₹)": flows,
         "Discount Factor": 1.0 / discount,
-        "Present Value ($)": pv,
+        "Present Value (₹)": pv,
         "% of Price": [f"{v:.2f}%" for v in pv / pv.sum() * 100.0],
     })
 
     fig_cf = go.Figure()
-    fig_cf.add_trace(go.Bar(x=cf_df["Year"], y=cf_df["Present Value ($)"], marker=dict(color=PRIMARY),
-                            hovertemplate="Year %{x:.2f}<br>PV $%{y:,.2f}<extra></extra>"))
-    style_fig(fig_cf, "Present Value of Each Cash Flow", "Years from now", "Present Value ($)", height=380)
+    fig_cf.add_trace(go.Bar(x=cf_df["Year"], y=cf_df["Present Value (₹)"], marker=dict(color=PRIMARY),
+                            hovertemplate="Year %{x:.2f}<br>PV ₹%{y:,.2f}<extra></extra>"))
+    style_fig(fig_cf, "Present Value of Each Cash Flow", "Years from now", "Present Value (₹)", height=380)
     fig_cf.update_layout(showlegend=False)
     st.plotly_chart(fig_cf)
     st.dataframe(
         cf_df, hide_index=True,
         column_config={
             "Year": st.column_config.NumberColumn(format="%.2f"),
-            "Cash Flow ($)": st.column_config.NumberColumn(format="$%.2f"),
+            "Cash Flow (₹)": st.column_config.NumberColumn(format="₹%.2f"),
             "Discount Factor": st.column_config.NumberColumn(format="%.4f"),
-            "Present Value ($)": st.column_config.NumberColumn(format="$%.2f"),
+            "Present Value (₹)": st.column_config.NumberColumn(format="₹%.2f"),
         })
     st.caption("The final period includes the return of face value. Present values sum to the price at the solved YTM.")
 
