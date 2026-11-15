@@ -1,3 +1,7 @@
+# NOTE: standalone walkthrough (exported notebook) of the ideas behind the dashboard.
+# Run it on its own: pip install -r requirements-dev.txt && python bond-analysis.py
+# The dashboard itself uses bond_math.py, not this file.
+
 # %% [markdown]
 # # Imports
 
@@ -129,5 +133,3 @@ def b_convexity(price, par, T, coup, freq, dy=0.01):
     convexity = (price_minus+price_plus-2*price)/(price*dy**2)
     return convexity
 print(b_convexity(95.0428, 100, 1.5, 5.75, 2))
-
-
