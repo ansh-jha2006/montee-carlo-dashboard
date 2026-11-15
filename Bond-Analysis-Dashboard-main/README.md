@@ -1,35 +1,48 @@
-# Fixed-Income Analysis Dashboard
+# Fixed-Income Bond Analysis Dashboard
 
-## Overview
+An interactive **Streamlit** dashboard for bond valuation, interest-rate risk, and Monte Carlo price simulation, built with Python, NumPy, SciPy, and Plotly.
 
-This project is a **Fixed-Income Bond Analysis  built using **Python, Streamlit, NumPy, SciPy, and Plotly**. The dashboard provides key insights into bond valuation, risk metrics, and price simulations using Monte Carlo methods.
-
+![demo](demo.png)
 
 ## Features
 
-- **Yield to Maturity (YTM) Calculation** – Computes the bond's internal rate of return using numerical root-finding methods.
-- **Bond Pricing Model** – Calculates bond price based on coupon rate, time to maturity, and YTM.
-- **Bond Duration & Convexity** – Measures interest rate sensitivity and curvature risk.
-- **Current Yield Calculation** – Determines the annual return based on the bond’s market price.
-- **Monte Carlo Simulation** – Generates a distribution of possible bond prices based on simulated YTMs.
-- **Interactive Dashboard** – Users can input bond parameters and visualize results dynamically.
+- **Yield to Maturity (YTM)**: solved numerically (Brent's method) from the market price.
+- **Bond pricing**: present value of the coupon and principal cash flows at a given YTM.
+- **Macaulay & modified duration, convexity**: interest-rate sensitivity and curvature.
+- **Current yield**: annual coupon divided by market price.
+- **Rate shock scenario**: exact repricing under a parallel yield shift, next to a duration + convexity estimate as a sanity check.
+- **Monte Carlo simulation**: bond price distribution from normally distributed yields (configurable volatility and seed), with mean, standard deviation, 5th/95th percentiles, min and max.
 
-## Monte Carlo Simulation Statistics
+## Conventions
 
-The Monte Carlo module generates **thousands of bond price simulations**, providing:
+Coupon rate and yields are annual rates; YTM is compounded at the coupon frequency (semiannual by default, i.e. bond-equivalent yield). Durations are in years and convexity in years². Pricing, YTM, duration, convexity, and the simulation all use the same conventions, so repricing at the solved YTM returns the market price.
 
-- **Mean Price** – Expected bond price.
-- **Standard Deviation** – Volatility of simulated prices.
-- **5th and 95th Percentiles** – Risk bounds for price movement.
-- **Min and Max Prices** – Extreme cases for stress testing.
+## Run locally
 
-## Technologies Used
+```bash
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+streamlit run bond-analysis-dashboard.py
+```
 
-- **Python** – Core programming language.
-- **Streamlit** – Interactive web application framework.
-- **NumPy & SciPy** – Numerical computing and optimization.
-- **Plotly** – Data visualization for histograms and charts.
+## Tests
 
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+The tests cover price/YTM round-trips across coupon frequencies, closed-form duration values, duration and convexity against finite differences, edge cases (zero coupon, zero yield, unsolvable prices), and Monte Carlo reproducibility.
+
+## Project layout
+
+| File | Purpose |
+| --- | --- |
+| `bond-analysis-dashboard.py` | Streamlit app (UI only) |
+| `bond_math.py` | Bond math, no Streamlit dependency |
+| `tests/` | Unit tests for `bond_math.py` |
+| `bond-analysis.py` | Standalone walkthrough script (exported notebook); needs `requirements-dev.txt` for matplotlib |
 
 ## License
-This project is licensed under the MIT License – see the LICENSE file for details.
+
+MIT, see [LICENSE](LICENSE).
